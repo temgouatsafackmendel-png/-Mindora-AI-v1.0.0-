@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Mindora AI</string>
+    <string name="app_slogan">Capture. Understand. Organize. Create.</string>
+    <string name="firebase_ai_notice">Mode Aperçu IA — Activez Firebase AI Logic pour connecter les modèles Gemini Cloud en direct.</string>
+    <string name="search_placeholder">Rechercher par titre, contenu, sémantique, tags, transcriptions…</string>
+    <string name="new_note">Nouvelle note</string>
+    <string name="quick_capture">Capture rapide</string>
+    <string name="nav_home">Accueil</string>
+    <string name="nav_all_notes">Toutes mes notes</string>
+    <string name="nav_favorites">Favoris</string>
+    <string name="nav_recent">Récemment consultées</string>
+    <string name="nav_shared">Notes partagées</string>
+    <string name="nav_folders">Dossiers &amp; Graphe</string>
+    <string name="nav_workspaces">Espaces de travail</string>
+    <string name="nav_tasks">Tâches</string>
+    <string name="nav_calendar">Calendrier</string>
+    <string name="nav_ai_assistant">Assistant IA (RAG)</string>
+    <string name="nav_trash">Corbeille</string>
+    <string name="nav_settings">Paramètres &amp; SaaS</string>
+    <string name="your_day_with_ai">Votre journée avec l\'IA</string>
+    <string name="auto_saved">Sauvegardé automatiquement</string>
+    <string name="saving">Sauvegarde en cours…</string>
+</resources>

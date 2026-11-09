@@ -1,0 +1,8 @@
+{
+  "name": "Mindora AI",
+  "description": "Espace de travail personnel intelligent et prise de notes augmentée par IA : capture multimodale, organisation des connaissances, tâches et RAG.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

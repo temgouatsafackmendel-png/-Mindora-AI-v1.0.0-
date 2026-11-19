@@ -70,7 +70,7 @@ fun AuthScreen(
     var activeTab by remember { mutableStateOf(AuthTab.LOGIN) }
     var name by remember { mutableStateOf("Mendel Temgoua") }
     var email by remember { mutableStateOf("mendeltemgouabusiness@gmail.com") }
-    var password by remember { mutableStateOf("Mindora2026!") }
+    var password by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier

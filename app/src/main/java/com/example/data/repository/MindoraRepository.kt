@@ -32,6 +32,7 @@ import com.example.data.local.WorkspaceEntity
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 import java.security.MessageDigest
+import java.security.SecureRandom
 import java.util.UUID
 
 class MindoraRepository(
@@ -39,11 +40,26 @@ class MindoraRepository(
     private val aiRepository: AiRepository
 ) {
     // --- SECURITY & CRYPTO HELPERS ---
-    fun hashPassword(password: String, salt: String = "mindora_saas_salt_v1"): String {
-        val digest = MessageDigest.getInstance("SHA-256")
-        val bytes = digest.digest("$salt:$password".toByteArray(Charsets.UTF_8))
-        return bytes.joinToString("") { "%02x".format(it) }
+    // Format "salt:hash" avec sel aléatoire par utilisateur (SHA-256 salé).
+    fun hashPassword(password: String, salt: String = newSalt()): String = "$salt:${sha256("$salt:$password")}"
+
+    fun verifyPassword(password: String, stored: String): Boolean {
+        val salt = stored.substringBefore(':', missingDelimiterValue = "")
+        val expected = if (salt.isEmpty()) {
+            // Ancien format (sel statique, sans séparateur)
+            sha256("mindora_saas_salt_v1:$password")
+        } else {
+            sha256("$salt:$password")
+        }
+        return MessageDigest.isEqual(expected.toByteArray(), stored.substringAfter(':').toByteArray())
     }
+
+    private fun newSalt(): String =
+        ByteArray(16).also { SecureRandom().nextBytes(it) }.joinToString("") { "%02x".format(it) }
+
+    private fun sha256(value: String): String =
+        MessageDigest.getInstance("SHA-256").digest(value.toByteArray(Charsets.UTF_8))
+            .joinToString("") { "%02x".format(it) }
 
     fun sanitizeInput(raw: String): String {
         return raw.replace("<script>", "", ignoreCase = true)
@@ -76,7 +92,7 @@ class MindoraRepository(
         val newUser = UserEntity(
             id = "user_mindora_primary",
             email = defaultEmail,
-            passwordHash = hashPassword("Mindora2026!"),
+            passwordHash = hashPassword(UUID.randomUUID().toString()),
             name = "Mendel Temgoua",
             avatar = "MT",
             planTier = PlanTier.PRO.name,
@@ -96,8 +112,7 @@ class MindoraRepository(
         }
         val user = dao.getUserByEmail(cleanEmail)
             ?: return Result.failure(IllegalArgumentException("Aucun compte trouvé pour cet email. Créez un compte en un clic."))
-        val expectedHash = hashPassword(password)
-        if (user.passwordHash != expectedHash) {
+        if (!verifyPassword(password, user.passwordHash)) {
             logSecurityEvent(user.id, "AUTH_FAILED", "Tentative de connexion échouée pour $cleanEmail")
             return Result.failure(IllegalArgumentException("Mot de passe incorrect."))
         }

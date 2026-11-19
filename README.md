@@ -37,20 +37,24 @@ L'APK installable est déjà pré-compilé et signé, prêt à être installé s
 
 ---
 
-## 🚀 Publier le Projet sur votre Compte GitHub
+## 🛠️ Développement local & CI
 
-Le dépôt est **100 % prêt pour GitHub** (avec `.gitignore`, `LICENSE` MIT, `CHANGELOG.md`, `CONTRIBUTING.md` et `.env.example`, sans fichier `.github/workflows` bloquant les permissions OAuth) :
+Prérequis : JDK 17, Android SDK (API 36) et Gradle 9.3.1 (le wrapper n'est pas versionné).
 
-- **Méthode directe (AI Studio) :** Cliquez sur l'icône **GitHub / Export** en haut à droite pour pousser directement le projet vers un nouveau dépôt sur votre compte GitHub.
-- **Méthode Git CLI (après export ZIP) :**
-  ```bash
-  git init
-  git add .
-  git commit -m "feat: release Mindora AI v2.0.0 by Mendel Temgoua"
-  git branch -M main
-  git remote add origin https://github.com/VOTRE-PROFIL/mindora-ai.git
-  git push -u origin main
-  ```
+```bash
+# Le debug.keystore n'est pas versionné : générez-le une fois à la racine
+keytool -genkeypair -keystore debug.keystore -storepass android -keyalias androiddebugkey \
+  -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+gradle :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
+```
+
+Le workflow GitHub Actions [`ci.yml`](.github/workflows/ci.yml) exécute build, tests et lint à chaque push/PR.
+Le build *release* lit `KEYSTORE_PATH`, `STORE_PASSWORD` et `KEY_PASSWORD` depuis l'environnement ; ne commitez jamais de clés ni de fichiers `.env`.
+
+## 🔒 Sécurité
+
+- Mots de passe locaux hachés (SHA-256 avec sel aléatoire par utilisateur) ; aucun identifiant prérempli.
+- Sauvegarde Android et trafic en clair désactivés.
 
 ---
 

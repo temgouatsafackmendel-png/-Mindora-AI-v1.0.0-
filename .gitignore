@@ -16,3 +16,22 @@
 local.properties
 .env
 debug.keystore
+
+# Android / Kotlin
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+*.jks
+*.keystore
+!debug.keystore.example
+.idea/
+*.hprof
+/app/build
+/app/release
+/app/debug
+captures/
+google-services.json
+.env.*
+!.env.example
